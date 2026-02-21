@@ -50,9 +50,9 @@ This is a Spring Boot REST API built to manage chat histories for RAG-based syst
 
 ## 4. Access & Monitoring
 - API Documentation (Swagger)
-   - http://localhost:8080/swagger-ui/index.html
+   - http://localhost:8081/swagger-ui/index.html
 - Health Monitoring
-   - http://localhost:8080/actuator/health
+   - http://localhost:8081/actuator/health
 
 ## 5. Database Management (pgAdmin)
 Browse PostgreSQL data:
