@@ -27,6 +27,61 @@ This is a Spring Boot REST API built to manage chat histories for RAG-based syst
 - Before running the project, ensure you have the following installed:
 * Docker & Docker Compose
 
+## Available APIs
+  - Chat Session APIs
+
+      ** Create Session **
+        - Endpoint: http://localhost:8081/sessions
+        - Methor: POST
+        - Description: Create a new chat session for a user.
+        - Response: Session details.
+       
+      ** Get Session by ID **
+        - Endpoint: http://localhost:8081/sessions/{id}
+        - Methor: GET
+        - Description: Retrieve a single chat session by its ID.
+        - Response: Session details.
+
+      ** Get Sessions by User **
+        - Endpoint: http://localhost:8081/sessions/users/{userId}
+        - Methor: GET
+        - Description: Retrieve all sessions for a given user.
+        - Response: List of sessions.
+
+      ** Update Session **
+        - Endpoint: http://localhost:8081/sessions/{id}
+        - Methor: PATCH
+        - Description: Update the session title or status.
+        - Response: Updated session details.
+
+      ** Delete Session **
+        - Endpoint: http://localhost:8081/sessions/{id}
+        - Methor: DELETE
+        - Description: Delete a session by ID.
+        - Response: Success/failure status..
+    
+  - Chat Message APIs
+      ** Create Message **
+        - Endpoint: http://localhost:8081/sessions/{sessionId}/messages
+        - Methor: POST
+        - Description: Add a new message to a session.
+        - Response: Return message object.
+
+       ** Get Messages **
+        - Endpoint: http://localhost:8081/sessions/{sessionId}/messages?page=0&size=20
+        - Methor: GET
+        - Description: Retrieve messages for a session with pagination.
+        - Response: Paginated list of messages.
+        -  Query Params:
+            - page – page number (default 0)
+            - size – page size (default 20)
+
+       ** Delete Message **
+        - Endpoint: http://localhost:8081//messages/{messageId}
+        - Methor: DELETE
+        - Description: Delete a message by ID.
+        - Response: Success/failure status..
+
                         ##  Setup & Installation
 
 ## 1. Clone the Repository
