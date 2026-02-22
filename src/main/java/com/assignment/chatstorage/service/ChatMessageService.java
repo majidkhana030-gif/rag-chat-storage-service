@@ -10,7 +10,7 @@ import java.util.List;
 public interface ChatMessageService {
     ApiResponse<MessageResponseDto> createMessage(Long sessionId, MessageRequestDto request);
 
-    ApiResponse<Page<MessageResponseDto>> getMessagesBySessionId(Long sessionId, int page, int size);
+    ApiResponse<List<MessageResponseDto>> getMessagesBySessionId(Long sessionId, int page, int size);
 
     ApiResponse<Void> deleteMessage(Long messageId);
 }

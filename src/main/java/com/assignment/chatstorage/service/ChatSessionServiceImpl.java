@@ -70,7 +70,7 @@ public class ChatSessionServiceImpl implements ChatSessionService{
 
     @Override
     public ApiResponse<Void> deleteSessionById(Long id) {
-        ChatSessionEntity sessionEntity = chatSessionRepository.findById(id).orElseThrow(()->new SessionNotFoundException((AppConstants.SESSION_NOT_FOUND)));
+        ChatSessionEntity sessionEntity = chatSessionRepository.findById(id).orElseThrow(()->new SessionNotFoundException((AppConstants.SESSION_NOT_FOUND.formatted(id))));
         chatSessionRepository.delete(sessionEntity);
 
         return ApiResponse.success(AppConstants.SESSION_DELETED_SUCCESSFULLY);

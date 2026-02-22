@@ -20,7 +20,7 @@ import java.util.Arrays;
 @Component
 public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
-    @Value("${API_KEY:}")
+    @Value("${app.security.api-key}")
     private String configuredApiKey;
 
     private static final String HEADER_NAME = "X-API-KEY";
@@ -28,8 +28,14 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
     private static final List<String> WHITELIST = Arrays.asList(
             "/v3/api-docs",
+            "/v3/api-docs/",
+            "/v3/api-docs.yaml",
+            "/v3/api-docs/swagger-config",
             "/swagger-ui",
+            "/swagger-ui/",
             "/swagger-ui.html",
+            "/swagger-ui/index.html",
+            "/swagger-ui/",
             "/actuator/health"
     );
 
@@ -40,7 +46,7 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        System.out.println("ApiKeyAuthFilter request path: " + path);
+
         if (WHITELIST.stream().anyMatch(path::startsWith)) {
             filterChain.doFilter(request, response);
             return;

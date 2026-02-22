@@ -3,7 +3,7 @@ package com.assignment.chatstorage.controller;
 import com.assignment.chatstorage.constant.AppConstants;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.data.domain.Page;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import com.assignment.chatstorage.dto.ApiResponse;
 import com.assignment.chatstorage.dto.MessageRequestDto;
 import com.assignment.chatstorage.dto.MessageResponseDto;
@@ -31,7 +31,7 @@ public class ChatMessageControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @MockitoBean
+    @MockBean
     private ChatMessageService chatMessageService;
 
     @Autowired
@@ -72,18 +72,19 @@ public class ChatMessageControllerTest {
 
         MessageResponseDto dto = new MessageResponseDto(1L, "User", "Hello", null, null);
 
-        PageImpl<MessageResponseDto> page =
-                new PageImpl<>(List.of(dto), PageRequest.of(0, 20), 1);
+        List<MessageResponseDto> messages = List.of(dto);
 
-        ApiResponse<Page<MessageResponseDto>> apiResponse = ApiResponse.success(page, AppConstants.MESSAGE_FETCHED);
+        ApiResponse<List<MessageResponseDto>> apiResponse =
+                ApiResponse.success(messages, AppConstants.MESSAGE_FETCHED);
 
-        Mockito.when(chatMessageService.getMessagesBySessionId(1L, 0, 20)).thenReturn(apiResponse);
+        Mockito.when(chatMessageService.getMessagesBySessionId(1L, 0, 20))
+                .thenReturn(apiResponse);
 
         mockMvc.perform(get("/sessions/1/messages")
                         .param("page", "0")
                         .param("size", "20"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.content[0].content").value("Hello"));
+                .andExpect(jsonPath("$.data[0].content").value("Hello"));
     }
 
     @Test

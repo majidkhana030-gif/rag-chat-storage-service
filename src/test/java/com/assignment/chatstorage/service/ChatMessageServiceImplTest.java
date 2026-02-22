@@ -82,13 +82,14 @@ public class ChatMessageServiceImplTest {
     }
 
     @Test
-    void shouldReturnPagedMessagesSuccessfully(){
+    void shouldReturnPagedMessagesSuccessfully() {
         Long sessionId = 1L;
 
         ChatSessionEntity session = new ChatSessionEntity();
         session.setId(sessionId);
 
-        when(chatSessionRepository.findByIdAndStatus(eq(sessionId), any())).thenReturn(Optional.of(session));
+        when(chatSessionRepository.findByIdAndStatus(eq(sessionId), any()))
+                .thenReturn(Optional.of(session));
 
         ChatMessageEntity entity = new ChatMessageEntity();
         entity.setId(1L);
@@ -96,17 +97,18 @@ public class ChatMessageServiceImplTest {
 
         Page<ChatMessageEntity> page =
                 new PageImpl<>(List.of(entity), PageRequest.of(0, 10), 1);
-
         when(chatMessageRepository.findBySessionIdOrderByCreatedAtAsc(eq(sessionId), any(Pageable.class)))
                 .thenReturn(page);
 
-        ApiResponse<Page<MessageResponseDto>> response =
+        ApiResponse<List<MessageResponseDto>> response =
                 chatMessageService.getMessagesBySessionId(sessionId, 0, 10);
 
         assertEquals(200, response.statusCode());
-        assertEquals(1, response.data().getContent().size());
-        assertEquals("Test Message",
-                response.data().getContent().getFirst().content());
+
+        // Direct list access instead of getContent()
+        List<MessageResponseDto> messages = response.data();
+        assertEquals(1, messages.size());
+        assertEquals("Test Message", messages.get(0).content());
     }
 
     @Test
@@ -117,18 +119,16 @@ public class ChatMessageServiceImplTest {
         session.setId(sessionId);
 
         when(chatSessionRepository.findByIdAndStatus(eq(sessionId), any())).thenReturn(Optional.of(session));
-
-        Page<ChatMessageEntity> emptyPage =
-                new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
-
+        Page<ChatMessageEntity> emptyPage = new PageImpl<>(List.of(), PageRequest.of(0, 10), 0);
         when(chatMessageRepository.findBySessionIdOrderByCreatedAtAsc(eq(sessionId), any(Pageable.class)))
                 .thenReturn(emptyPage);
 
-        ApiResponse<Page<MessageResponseDto>> response =
+        ApiResponse<List<MessageResponseDto>> response =
                 chatMessageService.getMessagesBySessionId(sessionId, 0, 10);
 
         assertEquals(200, response.statusCode());
-        assertTrue(response.data().getContent().isEmpty());
+        List<MessageResponseDto> messages = response.data();
+        assertTrue(messages.isEmpty());
     }
 
     @Test

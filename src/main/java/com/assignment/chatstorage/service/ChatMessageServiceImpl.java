@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -42,19 +44,24 @@ public class ChatMessageServiceImpl implements ChatMessageService{
     }
 
     @Override
-    public ApiResponse<Page<MessageResponseDto>> getMessagesBySessionId(
-            Long sessionId, int page, int size){
+    public ApiResponse<List<MessageResponseDto>> getMessagesBySessionId(
+            Long sessionId, int page, int size) {
         log.info("Get chat message for sessionId={}", sessionId);
 
         sessionRepository.findByIdAndStatus(sessionId, AppConstants.SESSION_ACTIVE)
-                .orElseThrow(() -> new SessionNotFoundException(AppConstants.SESSION_NOT_FOUND.formatted(sessionId)));
+                .orElseThrow(() -> new SessionNotFoundException(
+                        AppConstants.SESSION_NOT_FOUND.formatted(sessionId)
+                ));
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<MessageResponseDto> messages = messageRepository
-                .findBySessionIdOrderByCreatedAtAsc(sessionId, pageable)
-                .map(MessageResponseDto::fromEntity);
 
-        return ApiResponse.success(messages, AppConstants.MESSAGE_FETCHED);
+        List<MessageResponseDto> messagesList = messageRepository
+                .findBySessionIdOrderByCreatedAtAsc(sessionId, pageable)
+                .stream()
+                .map(MessageResponseDto::fromEntity)
+                .toList();
+
+        return ApiResponse.success(messagesList, AppConstants.MESSAGE_FETCHED);
     }
 
     @Override
