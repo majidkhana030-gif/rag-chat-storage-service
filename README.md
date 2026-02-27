@@ -1,4 +1,4 @@
-# DGE API – Chat Storage Microservice
+# RAG API – Chat Storage Microservice
 
 This is a Spring Boot REST API built to manage chat histories for RAG-based systems. It features secure session management, message persistence with pagination, and a fully containerized environment.
 
